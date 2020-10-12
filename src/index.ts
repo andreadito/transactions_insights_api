@@ -11,10 +11,10 @@ const port = 3000;
 const logger = pino({
   prettyPrint: {
     levelFirst: true,
-    colorize: true
+    colorize: true,
   },
-  useLevel: 'info'
-})
+  useLevel: 'info',
+});
 
 const httpLogger = pinoHttp({
   logger: logger,
@@ -24,4 +24,4 @@ app.use(httpLogger);
 app.use(helmet());
 app.use('/api', apiRoutes);
 
-app.listen(port)
+app.listen(port);
