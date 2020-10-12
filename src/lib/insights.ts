@@ -125,27 +125,27 @@ function getIncomeAndOutgoings(transactions: Transaction[]) {
   return [];
 }
 
+function calculateInsights(insight) {
+  const map = {
+    spendByCategory: getSpendingByCategory,
+    spendingComparison: getSpendingComparison,
+    incomeAndOutgoings: getIncomeAndOutgoings,
+    default: () => [],
+  };
+  return map[insight] || map['default'];
+}
+
 function getInsights(transactions, filters) {
   if (!transactions) return [];
 
   const insights = filters ? filters : allAvailableInsights;
 
-  return insights.map((insight) => {
-    switch (insight) {
-      case 'incomeAndOutgoings':
-        return getIncomeAndOutgoings(transactions);
-      case 'spendByCategory':
-        return getSpendingByCategory(transactions);
-      case 'spendingComparison':
-        return getSpendingComparison(transactions);
-      default:
-        return [];
-    }
-  });
+  return insights.map((insight) => calculateInsights(insight)(transactions));
 }
 
 export default {
   getInsights,
+  calculateInsights,
   getIncomeAndOutgoings,
   getSpendingByCategory,
   getSpendingComparison,

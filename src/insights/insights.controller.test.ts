@@ -1,4 +1,4 @@
-import { list } from './insights.controller';
+import { extractInsightFiltersFromQuery, list } from './insights.controller';
 describe('Insigths Controller', () => {
   const mockedSendJson = jest.fn();
   const res = {
@@ -30,6 +30,27 @@ describe('Insigths Controller', () => {
           }),
         ])
       );
+    });
+  });
+
+  describe('extractInsightFiltersFromQuery', () => {
+    it('should return an array of filters if query has insights key', () => {
+      const result = extractInsightFiltersFromQuery({
+        insights: 'incomeAndOutgoings,spendByCategory',
+      });
+      expect(result).toStrictEqual(['incomeAndOutgoings', 'spendByCategory']);
+    });
+    it('should return null if the insights key is not defined', () => {
+      const result = extractInsightFiltersFromQuery({
+        foo: 'bar',
+      });
+      expect(result).toStrictEqual(null);
+    });
+    it('should return null if the insights doesnt have any filter', () => {
+      const result = extractInsightFiltersFromQuery({
+        insights: '',
+      });
+      expect(result).toStrictEqual(null);
     });
   });
 });

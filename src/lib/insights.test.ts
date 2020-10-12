@@ -399,7 +399,6 @@ describe('insights lib', () => {
         merchantSender: "D'Amore - Cremin",
       },
     ];
-
     const getIncomeAndOutgoingsSpy = jest.spyOn(
       insights,
       'getIncomeAndOutgoings'
@@ -413,14 +412,15 @@ describe('insights lib', () => {
       'getSpendingComparison'
     );
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should call all the allowed insights and return an array of results', () => {
-      insights.getInsights(transactions);
+      insights.getInsights(transactions, null);
       expect(getIncomeAndOutgoingsSpy).toHaveBeenCalled();
       expect(getSpendingByCategorySpy).toHaveBeenCalled();
       expect(getSpendingComparisonSpy).toHaveBeenCalled();
-      getIncomeAndOutgoingsSpy.mockClear();
-      getSpendingByCategorySpy.mockClear();
-      getSpendingByCategorySpy.mockClear();
     });
   });
 });
