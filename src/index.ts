@@ -13,6 +13,7 @@ const logger = pino({
     levelFirst: true,
     colorize: true,
   },
+  ignore: 'res',
   useLevel: 'info',
 });
 

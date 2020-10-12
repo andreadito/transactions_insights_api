@@ -9,19 +9,22 @@ const allowedInsights = [
   'spendingComparison',
 ];
 
-export function getSpendingByCategory(transactions: Transaction[]) {
-  const byCategory = pipe(
-    groupBy((element: Transaction) => element.category),
-    map(filter(({ type }) => type === 'out'))
-  );
+const byCategory = pipe(
+  groupBy((element: Transaction) => element.category),
+  map(filter(({ type }) => type === 'out'))
+);
+
+const byType = pipe(groupBy(prop('type')));
+
+function getSpendingByCategory(transactions: Transaction[]) {
+  const results = [];
+  if (!transactions) return results;
 
   const grouped = byCategory(
     transactions.filter((transaction) =>
       isThisMonth(Date.parse(transaction.date))
     )
   );
-
-  const results = [];
 
   for (const key in grouped) {
     if (grouped.hasOwnProperty(key)) {
@@ -41,8 +44,9 @@ export function getSpendingByCategory(transactions: Transaction[]) {
   return results;
 }
 
-export function getSpendingComparison(transactions: Transaction[]) {
-  const byType = pipe(groupBy(prop('type')));
+function getSpendingComparison(transactions: Transaction[]) {
+  if (!transactions || !(transactions.length > 0)) return [];
+
   const thisMonth = byType(
     transactions.filter((transaction) =>
       isThisMonth(Date.parse(transaction.date))
@@ -82,58 +86,65 @@ export function getSpendingComparison(transactions: Transaction[]) {
   ];
 }
 
-export function getIncomeAndOutgoings(transactions: Transaction[]) {
-  const byType = pipe(groupBy(prop('type')));
-
+function getIncomeAndOutgoings(transactions: Transaction[]) {
+  if (!transactions) return [];
   const grouped = byType(
     transactions.filter((transaction) =>
       isThisMonth(Date.parse(transaction.date))
     )
   );
+  if (Object.entries(grouped).length > 0) {
+    const income =
+      grouped['in'] &&
+      grouped['in'].reduce((acc, { amount }: Transaction) => {
+        return (acc += amount);
+      }, 0);
 
-  const income =
-    grouped['in'] &&
-    grouped['in'].reduce((acc, { amount }: Transaction) => {
-      return (acc += amount);
-    }, 0);
+    const outgoings =
+      grouped['out'] &&
+      grouped['out'].reduce((acc, { amount }: Transaction) => {
+        return (acc += amount);
+      }, 0);
 
-  const outgoings =
-    grouped['out'] &&
-    grouped['out'].reduce((acc, { amount }: Transaction) => {
-      return (acc += amount);
-    }, 0);
-
-  return [
-    {
-      type: 'incomeAndOutgoings',
-      message: `You've spent ${
-        outgoings && outgoings.toFixed(2)
-      } £ in total this month!`,
-    },
-    {
-      type: 'incomeAndOutgoings',
-      message: `You've earned ${
-        income && income.toFixed(2)
-      } £ in total this month!`,
-    },
-  ];
-}
-
-export function getInsights(transactions) {
-  if (transactions && transactions.length > 0) {
-    return allowedInsights.map((insight) => {
-      switch (insight) {
-        case 'incomeAndOutgoings':
-          return getIncomeAndOutgoings(transactions);
-        case 'spendByCategory':
-          return getSpendingByCategory(transactions);
-        case 'spendingComparison':
-          return getSpendingComparison(transactions);
-        default:
-          return [];
-      }
-    });
-  } else {
-    return [];
+    return [
+      {
+        type: 'incomeAndOutgoings',
+        message: `You've spent ${
+          outgoings && outgoings.toFixed(2)
+        } £ in total this month!`,
+      },
+      {
+        type: 'incomeAndOutgoings',
+        message: `You've earned ${
+          income && income.toFixed(2)
+        } £ in total this month!`,
+      },
+    ];
   }
+
+  return [];
 }
+
+function getInsights(transactions) {
+  if (!transactions) return [];
+
+  return allowedInsights.map((insight) => {
+    switch (insight) {
+      case 'incomeAndOutgoings':
+        return getIncomeAndOutgoings(transactions);
+      case 'spendByCategory':
+        return getSpendingByCategory(transactions);
+      case 'spendingComparison':
+        return getSpendingComparison(transactions);
+      default:
+        return [];
+    }
+  });
+}
+
+export default {
+  getInsights,
+  getIncomeAndOutgoings,
+  getSpendingByCategory,
+  getSpendingComparison,
+};
