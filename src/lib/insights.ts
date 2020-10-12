@@ -3,7 +3,7 @@ import { filter, groupBy, map, pipe, prop } from 'ramda';
 
 import { Transaction } from '../fakeDB';
 
-const allowedInsights = [
+const allAvailableInsights = [
   'incomeAndOutgoings',
   'spendByCategory',
   'spendingComparison',
@@ -125,10 +125,12 @@ function getIncomeAndOutgoings(transactions: Transaction[]) {
   return [];
 }
 
-function getInsights(transactions) {
+function getInsights(transactions, filters) {
   if (!transactions) return [];
 
-  return allowedInsights.map((insight) => {
+  const insights = filters ? filters : allAvailableInsights;
+
+  return insights.map((insight) => {
     switch (insight) {
       case 'incomeAndOutgoings':
         return getIncomeAndOutgoings(transactions);
