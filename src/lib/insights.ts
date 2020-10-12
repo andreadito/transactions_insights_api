@@ -24,13 +24,18 @@ export function getSpendingByCategory(transactions: Transaction[]) {
   const results = [];
 
   for (const key in grouped) {
-    const total =
-      grouped[key] &&
-      grouped[key].reduce((acc, transaction) => (acc += transaction.amount), 0);
-    results.push({
-      type: 'spendByCategory',
-      message: `You've spent ${total.toFixed(2)} £ at ${key} this month`,
-    });
+    if (grouped.hasOwnProperty(key)) {
+      const total =
+        grouped[key] &&
+        grouped[key].reduce(
+          (acc, transaction) => (acc += transaction.amount),
+          0
+        );
+      results.push({
+        type: 'spendByCategory',
+        message: `You've spent ${total.toFixed(2)} £ at ${key} this month`,
+      });
+    }
   }
 
   return results;
