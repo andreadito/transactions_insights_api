@@ -6,7 +6,7 @@ import pinoHttp from 'pino-http';
 import apiRoutes from './index.route';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const logger = pino({
   prettyPrint: {
