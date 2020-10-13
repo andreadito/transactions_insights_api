@@ -1,11 +1,16 @@
 ### REST API to retrieve insights about a customer’s transactions
 
+Production ENV: https://andreadito-test.nw.r.appspot.com/api/insights/:customerID
+
 **Stack:** Node.js, Express, Typescript, Jest
 
 
 
 **INSTALL**
 `npm run install`
+
+**BUILD:** 
+`npm run build`
 
 **RUN:** 
 `npm run start`
