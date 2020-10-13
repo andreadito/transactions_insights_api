@@ -9,8 +9,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "start": "run-s build start:node",
-    "start:node": "node ./build/main/index.js",
+    "start": "node ./build/main/index.js",
     "dev": "run-p watch:build dev:server",
     "dev:server": "nodemon ./build/main/index.js --watch",
     "build": "tsc -p tsconfig.json",
