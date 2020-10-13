@@ -70,8 +70,7 @@ Available Insights are:
 
 `spendByCategory`
 
-
-###Next
+### Whats Next
 - Add Auth
 - Add Rate limiter
 - Add more Insights
