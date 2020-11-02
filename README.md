@@ -1,3 +1,5 @@
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=andreadito_transactions_insights_api)](https://sonarcloud.io/dashboard?id=andreadito_transactions_insights_api)
+
 ### REST API to retrieve insights about a customer’s transactions
 
 Production ENV: https://andreadito-test.nw.r.appspot.com/api/insights/:customerID
